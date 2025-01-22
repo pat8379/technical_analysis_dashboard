@@ -18,7 +18,15 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const chartPromptMutation = useMutation({
     mutationFn: chartPrompt,
     onSuccess: (data) => {
-      console.log(data);
+      const convertedArray = data.map(item => {
+          return {
+              ...item, // Spread existing properties
+              date: new Date(item.date) // Create a new Date object
+          };
+      });
+
+      setChartData(convertedArray)
+
     },
   });
 

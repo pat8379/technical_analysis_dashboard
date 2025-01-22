@@ -1,19 +1,13 @@
 import { useAppContext } from "@src/hooks/useAppContext";
 import { IgrFinancialChart } from "igniteui-react-charts";
 import { IgrFinancialChartModule } from "igniteui-react-charts";
-import { useState } from "react";
-import StocksHistory from "./data";
-
+// import { useEffect, useState } from "react";
+// import StocksHistory from "./data";
 IgrFinancialChartModule.register();
 
 const Chart = () => {
   const { ticker, chartData } = useAppContext();
-
-  const func = async () => {
-    const res = await StocksHistory.getMultipleStocks();
-    // console.log(res);
-  };
-
+  
   return (
     <div className="">
       <div className="" style={{ height: "calc(100% - 25px)" }}>
@@ -25,7 +19,7 @@ const Chart = () => {
           chartTitle={ticker || "empty"}
           // subtitle="Between 2013 and 2017"
           yAxisMode="Numeric"
-          yAxisTitle="Percent Changed"
+          yAxisTitle="Price"
           dataSource={chartData}
         />
       </div>
