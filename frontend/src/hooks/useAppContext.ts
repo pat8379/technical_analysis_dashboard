@@ -3,6 +3,8 @@ import React, { useContext, createContext, Context } from "react";
 interface AppContextData {
   ticker;
   setTicker: React.Dispatch<React.SetStateAction<string>>;
+  tempTicker;
+  setTempTicker: React.Dispatch<React.SetStateAction<string>>;
   startDate;
   setStartDate: React.Dispatch<React.SetStateAction<any>>;
   endDate;
@@ -17,6 +19,9 @@ interface AppContextData {
   chartData: any[];
   setChartData: React.Dispatch<React.SetStateAction<any[]>>;
   fetchData: () => unknown;
+  tickerName: string;
+  setTickerName: React.Dispatch<React.SetStateAction<string>>;
+  findNameFromStockList: () => string;
 }
 
 export const AppContext: Context<AppContextData | undefined> = createContext<

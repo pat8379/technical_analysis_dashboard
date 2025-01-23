@@ -6,6 +6,8 @@ import { useStockList } from "./queries/useStockList";
 
 const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [ticker, setTicker] = useState<string>("AAPL");
+  const [tempTicker, setTempTicker] = useState<string>("AAPL")
+  const [tickerName, setTickerName] = useState("")
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
 
@@ -38,11 +40,19 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchData = () => {
     chart({
-      ticker,
+      ticker: tempTicker,
       start_date: startDate,
       end_date: endDate,
     });
+    setTicker(tempTicker)
   };
+
+  const findNameFromStockList = () => {
+    if (stockList && ticker) {
+      const item = stockList.find(obj => obj.value === ticker);
+      return item ? item.label : ""; 
+    }
+  }
 
   useEffect(() => {
     if (!ticker) {
@@ -79,6 +89,11 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         chartData,
         setChartData,
         fetchData,
+        tickerName,
+        setTickerName,
+        findNameFromStockList,
+        tempTicker,
+        setTempTicker
       }}
     >
       {children}

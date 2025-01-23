@@ -1,4 +1,6 @@
 import React from "react";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { Divider } from "rsuite";
 import Chart from "./Chart";
 
 const MainView = () => {
@@ -8,7 +10,16 @@ const MainView = () => {
         <h2 className="font-bold text-lg mt-10">
           AI Technical Analysis Dashboard
         </h2>
-        <Chart />
+        <PanelGroup direction="vertical">
+          <Panel maxSize={100} defaultSize={100}>
+            <Chart />
+          </Panel>
+          <PanelResizeHandle>
+          <Divider />
+          </PanelResizeHandle>
+          <Panel maxSize={75}>
+          </Panel>
+        </PanelGroup>
       </div>
     </div>
   );

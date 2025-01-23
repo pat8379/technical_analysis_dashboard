@@ -6,24 +6,22 @@ import { IgrFinancialChartModule } from "igniteui-react-charts";
 IgrFinancialChartModule.register();
 
 const Chart = () => {
-  const { ticker, chartData } = useAppContext();
+  const { ticker, chartData, findNameFromStockList } = useAppContext();
   
   return (
-    <div className="">
-      <div className="" style={{ height: "calc(100% - 25px)" }}>
+      <div className=" h-[100%]">
         <IgrFinancialChart
           width="100%"
-          height="400px"
+          height="100%"
           chartType="Line"
           thickness={2}
           chartTitle={ticker || "empty"}
-          // subtitle="Between 2013 and 2017"
+          subtitle={findNameFromStockList()}
           yAxisMode="Numeric"
           yAxisTitle="Price"
           dataSource={chartData}
         />
       </div>
-    </div>
   );
 };
 

@@ -3,7 +3,7 @@ import React from "react";
 import { DatePicker, AutoComplete, Button, InputPicker } from "rsuite";
 
 const Sidebar = () => {
-  const { setStartDate, setEndDate, canFetch, ticker, setTicker, fetchData, stockList } =
+  const { setStartDate, setEndDate, canFetch, tempTicker, setTempTicker, fetchData, stockList } =
     useAppContext();
 
   return (
@@ -15,8 +15,8 @@ const Sidebar = () => {
             <p className="mb-1">Stock Ticker</p>
             <InputPicker
               data={stockList || [{ label: "", value: "" }]}
-              value={ticker}
-              onChange={(value) => setTicker(value)}
+              value={tempTicker}
+              onChange={(value) => setTempTicker(value)}
               style={{ width: "100%" }}
             />
           </div>

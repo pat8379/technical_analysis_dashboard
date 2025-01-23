@@ -11,8 +11,18 @@ def post_chart_data():
     req = request.json
 
     ticker = req.get("ticker", None)
-    start_date = req.get("start_date", pd.to_datetime("2023-01-01"))
-    end_date = req.get("end_date", pd.to_datetime("2024-12-14"))
+    start_date = req.get("start_date", None)
+    end_date = req.get("end_date", None)
+
+    if not start_date:
+        start_date = pd.to_datetime("2019-01-01")
+    else:
+        start_date = pd.to_datetime(start_date[:11])
+
+    if not end_date:
+        end_date = pd.to_datetime("now")
+    else:
+        end_date = pd.to_datetime(end_date[:11])
 
     data = yf.download(ticker, start=start_date, end=end_date)
     data_list = data.reset_index().to_dict(orient='records')
@@ -31,8 +41,10 @@ def post_chart_data():
 def get_stock_list():
     wikipedia_data = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
     snp_company_list = wikipedia_data[0]
-    temp_result = snp_company_list['Symbol'].tolist()
+    temp_result = snp_company_list[['Symbol', 'Security']].reset_index().to_dict(orient='records')
+    print(temp_result[0])
 
-    result = [{'label': x, 'value': x} for x in temp_result]
+
+    result = [{'label': x['Security'], 'value': x['Symbol']} for x in temp_result]
     return result
 
