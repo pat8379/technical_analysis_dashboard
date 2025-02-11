@@ -22,6 +22,8 @@ interface AppContextData {
   tickerName: string;
   setTickerName: React.Dispatch<React.SetStateAction<string>>;
   findNameFromStockList: () => string;
+  takeImg: boolean;
+  setTakeImg: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AppContext: Context<AppContextData | undefined> = createContext<

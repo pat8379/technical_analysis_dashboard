@@ -6,29 +6,29 @@ import { useStockList } from "./queries/useStockList";
 
 const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [ticker, setTicker] = useState<string>("AAPL");
-  const [tempTicker, setTempTicker] = useState<string>("AAPL")
-  const [tickerName, setTickerName] = useState("")
+  const [tempTicker, setTempTicker] = useState<string>("AAPL");
+  const [tickerName, setTickerName] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
 
   const [canFetch, setCanFetch] = useState(false);
 
   const [chartData, setChartData] = useState<any[]>([]);
+  const [takeImg, setTakeImg] = useState(false);
 
   const { data: stockList, isPending: isPendingStockList } = useStockList();
 
   const chartPromptMutation = useMutation({
     mutationFn: chartPrompt,
     onSuccess: (data) => {
-      const convertedArray = data.map(item => {
-          return {
-              ...item, // Spread existing properties
-              date: new Date(item.date) // Create a new Date object
-          };
+      const convertedArray = data.map((item) => {
+        return {
+          ...item, // Spread existing properties
+          date: new Date(item.date), // Create a new Date object
+        };
       });
 
-      setChartData(convertedArray)
-
+      setChartData(convertedArray);
     },
   });
 
@@ -44,15 +44,15 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       start_date: startDate,
       end_date: endDate,
     });
-    setTicker(tempTicker)
+    setTicker(tempTicker);
   };
 
   const findNameFromStockList = () => {
     if (stockList && ticker) {
-      const item = stockList.find(obj => obj.value === ticker);
-      return item ? item.label : ""; 
+      const item = stockList.find((obj) => obj.value === ticker);
+      return item ? item.label : "";
     }
-  }
+  };
 
   useEffect(() => {
     if (!ticker) {
@@ -93,7 +93,9 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         setTickerName,
         findNameFromStockList,
         tempTicker,
-        setTempTicker
+        setTempTicker,
+        takeImg,
+        setTakeImg,
       }}
     >
       {children}

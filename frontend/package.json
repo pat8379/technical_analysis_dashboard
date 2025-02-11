@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.64.1",
+    "html2canvas": "^1.4.1",
     "igniteui-react-charts": "^18.7.6",
     "igniteui-react-core": "^18.7.6",
     "igniteui-react-excel": "^18.7.6",
