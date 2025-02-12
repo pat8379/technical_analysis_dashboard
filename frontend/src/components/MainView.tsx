@@ -1,11 +1,10 @@
-import { useAppContext } from "@src/hooks/useAppContext";
-import React from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { Divider, Button } from "rsuite";
+import { Divider } from "rsuite";
 import Chart from "./Chart";
+import ChatBox from "./ChatBox";
+import InputBox from "./InputBox";
 
 const MainView = () => {
-  const { setTakeImg } = useAppContext();
   return (
     <div className="p-4 h-full">
       <div className="h-full flex flex-col gap-4">
@@ -20,7 +19,10 @@ const MainView = () => {
             <Divider />
           </PanelResizeHandle>
           <Panel maxSize={75}>
-            <Button onClick={() => setTakeImg(true)}>Analyze Image</Button>
+            <div>
+              <InputBox />
+              <ChatBox />
+            </div>
           </Panel>
         </PanelGroup>
       </div>

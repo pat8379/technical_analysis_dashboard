@@ -24,6 +24,14 @@ interface AppContextData {
   findNameFromStockList: () => string;
   takeImg: boolean;
   setTakeImg: React.Dispatch<React.SetStateAction<boolean>>;
+  chat;
+  chatIsPending: boolean;
+  chatError;
+  answer: string;
+  setAnswer: React.Dispatch<React.SetStateAction<string>>;
+  handleDownloadImage;
+  printRef: React.MutableRefObject<undefined>;
+  handleChat: (string) => unknown;
 }
 
 export const AppContext: Context<AppContextData | undefined> = createContext<

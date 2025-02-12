@@ -1,8 +1,10 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { AppContext } from "@hooks/useAppContext";
 import { useMutation } from "@tanstack/react-query";
 import { chartPrompt } from "./mutations/useChart";
 import { useStockList } from "./queries/useStockList";
+import { chatPrompt } from "./mutations/useChat";
+import html2canvas from "html2canvas";
 
 const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [ticker, setTicker] = useState<string>("AAPL");
@@ -10,6 +12,10 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [tickerName, setTickerName] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+  const [answer, setAnswer] = useState<string>("");
+  const [imageData, setImageData] = useState<string>();
+
+  const printRef = useRef();
 
   const [canFetch, setCanFetch] = useState(false);
 
@@ -54,6 +60,38 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const chatPromptMutation = useMutation({
+    mutationFn: chatPrompt,
+    onSuccess: (data) => {
+      if (data && data?.response) {
+        setAnswer(data.response);
+      }
+    },
+  });
+
+  const {
+    mutate: chat,
+    isPending: chatIsPending,
+    error: chatError,
+  } = chatPromptMutation;
+
+  const handleChat = (chatInput) => {
+    handleDownloadImage(printRef);
+
+    chat({ message: chatInput, file: imageData });
+    // chat({ message: chatInput, file: data });
+  };
+
+  const handleDownloadImage = async (printRef) => {
+    const element = printRef?.current;
+    // @ts-ignore
+    const canvas = await html2canvas(element);
+
+    const canvasData = canvas.toDataURL("image/jpg");
+    // console.log(data);
+    setImageData(canvasData);
+  };
+
   useEffect(() => {
     if (!ticker) {
       setCanFetch(false);
@@ -96,6 +134,14 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         setTempTicker,
         takeImg,
         setTakeImg,
+        answer,
+        setAnswer,
+        chat,
+        chatIsPending,
+        chatError,
+        handleDownloadImage,
+        printRef,
+        handleChat,
       }}
     >
       {children}
