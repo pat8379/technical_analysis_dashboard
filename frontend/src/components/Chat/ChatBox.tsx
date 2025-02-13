@@ -40,7 +40,7 @@ const ChatBox = () => {
               {messageBox.role === "assistant" ? "Assistant" : "User"}
             </p>
             <p
-              className="rounded-md p-2"
+              className="rounded-md p-2 whitespace-pre-line"
               style={{
                 background:
                   messageBox.role === "assistant"
