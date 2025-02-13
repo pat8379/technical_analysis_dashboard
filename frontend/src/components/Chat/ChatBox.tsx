@@ -48,7 +48,7 @@ const ChatBox = () => {
                     : "rgb(139 194 255)",
               }}
             >
-              {messageBox.text}
+              {messageBox.content}
             </p>
           </div>
         </div>

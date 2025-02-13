@@ -1,8 +1,6 @@
 from flask import Blueprint, request, jsonify
-import requests
 import base64
 import os
-from src.ollama import client
 import ollama
 
 llm_bp = Blueprint("llm", __name__)
@@ -10,6 +8,7 @@ llm_bp = Blueprint("llm", __name__)
 @llm_bp.route('', methods=['POST'])
 def image_to_llm():
     user_message = request.json.get('message', None)
+    chat_history = request.json.get('chat_history', None)
     file = request.json.get('file', None)
 
     if not user_message:
@@ -25,23 +24,16 @@ def image_to_llm():
         with open(image_path, 'wb') as f:
             f.write(image_data)
 
-    return jsonify({"response": "hi"})
-
-    try:
-        # response = client.chat(model='llama3.2-vision', messages=[
-        #     {
-        #         'role': 'user',
-        #         'content': user_message,
-        #         'images': ['./image.jpg']
-        #     },
-        # ])
-        response = ollama.chat(
-            model='llama3.2-vision',
-            messages=[{
+    chat_history.append({
                 'role': 'user',
                 'content': user_message,
-                'images': ['.uploads/image.jpg']
-            }]
+                # 'images': ['./uploads/image.png']
+            })
+    try:
+        response = ollama.chat(
+            # model='llama3.2-vision',
+            model='gemma2:2b',
+            messages=chat_history
         )
 
         if response:

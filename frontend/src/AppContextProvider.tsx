@@ -72,7 +72,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     mutationFn: chatPrompt,
     onSuccess: (data) => {
       if (data && data?.response) {
-        pushChatHistory({ role: "assistant", text: data?.response });
+        pushChatHistory({ role: "assistant", content: data?.response });
       }
     },
   });
@@ -85,9 +85,8 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   const handleChat = async (chatInput) => {
     const data = await handleDownloadImage(printRef);
-    pushChatHistory({ role: "user", text: chatInput });
-    chat({ message: chatInput, file: data });
-    // chat({ message: chatInput, file: data });
+    pushChatHistory({ role: "user", content: chatInput });
+    chat({ message: chatInput, file: data, chat_history: chatHistory });
   };
 
   const handleDownloadImage = async (printRef) => {

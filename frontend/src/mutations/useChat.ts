@@ -1,9 +1,11 @@
+import { ChatBox } from "@src/utils/types";
 import { base_url } from "@utils/enums";
 import { fetchData } from "@utils/fetch";
 
 interface ChatParam {
   message: string;
   file?: string;
+  chat_history?: ChatBox[];
 }
 
 export const chatPrompt = async (param: ChatParam) => {
