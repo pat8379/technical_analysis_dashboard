@@ -1,3 +1,4 @@
+import { ChatBox } from "@src/utils/types";
 import React, { useContext, createContext, Context } from "react";
 
 interface AppContextData {
@@ -27,11 +28,17 @@ interface AppContextData {
   chat;
   chatIsPending: boolean;
   chatError;
-  answer: string;
-  setAnswer: React.Dispatch<React.SetStateAction<string>>;
+  // answer: string;
+  // setAnswer: React.Dispatch<React.SetStateAction<string>>;
   handleDownloadImage;
   printRef: React.MutableRefObject<undefined>;
   handleChat: (string) => unknown;
+  chatHistory: ChatBox[];
+  setChatHistory;
+  pushChatHistory: (item: ChatBox) => unknown;
+  removeChatHistory;
+  filterChatHistory;
+  updateChatHistory;
 }
 
 export const AppContext: Context<AppContextData | undefined> = createContext<

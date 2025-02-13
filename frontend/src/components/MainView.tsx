@@ -1,8 +1,6 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { Divider } from "rsuite";
 import Chart from "./Chart";
-import ChatBox from "./ChatBox";
-import InputBox from "./InputBox";
 
 const MainView = () => {
   return (
@@ -18,12 +16,6 @@ const MainView = () => {
           <PanelResizeHandle>
             <Divider />
           </PanelResizeHandle>
-          <Panel maxSize={75}>
-            <div>
-              <InputBox />
-              <ChatBox />
-            </div>
-          </Panel>
         </PanelGroup>
       </div>
     </div>

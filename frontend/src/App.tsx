@@ -1,17 +1,18 @@
-import { useState } from "react";
+import ChatView from "./components/Chat/ChatView";
 import MainView from "./components/MainView";
 import Sidebar from "./components/Sidebar";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <div className="flex h-screen">
       <div className="w-[20%]">
         <Sidebar />
       </div>
-      <div className="flex-grow">
+      <div className="w-[60%]">
         <MainView />
+      </div>
+      <div className="w-[20%]">
+        <ChatView />
       </div>
     </div>
   );

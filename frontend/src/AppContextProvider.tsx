@@ -5,6 +5,7 @@ import { chartPrompt } from "./mutations/useChart";
 import { useStockList } from "./queries/useStockList";
 import { chatPrompt } from "./mutations/useChat";
 import html2canvas from "html2canvas";
+import useArray from "./hooks/useArray";
 
 const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [ticker, setTicker] = useState<string>("AAPL");
@@ -12,8 +13,15 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [tickerName, setTickerName] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
-  const [answer, setAnswer] = useState<string>("");
-  const [imageData, setImageData] = useState<string>();
+
+  const {
+    array: chatHistory,
+    set: setChatHistory,
+    push: pushChatHistory,
+    remove: removeChatHistory,
+    filter: filterChatHistory,
+    update: updateChatHistory,
+  } = useArray([]); // store chat history
 
   const printRef = useRef();
 
@@ -64,7 +72,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     mutationFn: chatPrompt,
     onSuccess: (data) => {
       if (data && data?.response) {
-        setAnswer(data.response);
+        pushChatHistory({ role: "assistant", text: data?.response });
       }
     },
   });
@@ -75,10 +83,10 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
     error: chatError,
   } = chatPromptMutation;
 
-  const handleChat = (chatInput) => {
-    handleDownloadImage(printRef);
-
-    chat({ message: chatInput, file: imageData });
+  const handleChat = async (chatInput) => {
+    const data = await handleDownloadImage(printRef);
+    pushChatHistory({ role: "user", text: chatInput });
+    chat({ message: chatInput, file: data });
     // chat({ message: chatInput, file: data });
   };
 
@@ -89,7 +97,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
     const canvasData = canvas.toDataURL("image/jpg");
     // console.log(data);
-    setImageData(canvasData);
+    return canvasData;
   };
 
   useEffect(() => {
@@ -134,14 +142,18 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         setTempTicker,
         takeImg,
         setTakeImg,
-        answer,
-        setAnswer,
         chat,
         chatIsPending,
         chatError,
         handleDownloadImage,
         printRef,
         handleChat,
+        chatHistory,
+        setChatHistory,
+        pushChatHistory,
+        removeChatHistory,
+        filterChatHistory,
+        updateChatHistory,
       }}
     >
       {children}
