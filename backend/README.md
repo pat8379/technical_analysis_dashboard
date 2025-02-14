@@ -1,14 +1,27 @@
-## Initial set up
+### Ollama
+
+- install Ollama and pull Llama3.2 Vision or Gemma2 2B
 
 ```
+ollama pull llama3.2-vision
+ollama pull gemma2:2b
+```
+
+### Flask Server
+
+- create a virtual environment and install packages
+
+```
+cd backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Run
+- run Flask server
 
 ```
-source .venv/bin/activate
 flask run --debug
 ```
+
+- Backend live on http://127.0.0.1:5000

@@ -24,15 +24,20 @@ def image_to_llm():
         with open(image_path, 'wb') as f:
             f.write(image_data)
 
-    chat_history.append({
-                'role': 'user',
-                'content': user_message,
-                # 'images': ['./uploads/image.png']
-            })
+    ollama_model = os.environ['OLLAMA_MODEL']
+
+    chat_prompt = {
+        'role': 'user',
+        'content': user_message,
+    }
+    
+    if ollama_model == 'llama3.2-vision':
+        chat_prompt['images'] = ['./uploads/image.png']
+
+    chat_history.append(chat_prompt)
     try:
         response = ollama.chat(
-            # model='llama3.2-vision',
-            model='gemma2:2b',
+            model=ollama_model,
             messages=chat_history
         )
 
