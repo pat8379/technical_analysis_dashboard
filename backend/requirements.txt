@@ -5,3 +5,6 @@ requests
 pandas
 yfinance
 ollama
+pillow
+google-genai
+lxml

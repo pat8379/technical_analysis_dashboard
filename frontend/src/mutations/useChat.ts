@@ -14,7 +14,7 @@ export const chatPrompt = async (param: ChatParam) => {
   formdata.append("json", data);
 
   return await fetchData(
-    base_url + "/llm",
+    base_url + "/llm_gemini",
     {
       method: "POST",
       body: data,
