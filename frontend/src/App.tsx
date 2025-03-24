@@ -9,7 +9,9 @@ function App() {
         <Sidebar />
       </div>
       <div className="w-[60%]">
-        <MainView />
+        <div className="overflow-y-auto h-full">
+          <MainView />
+        </div>
       </div>
       <div className="w-[20%]">
         <ChatView />

@@ -8,3 +8,4 @@ ollama
 pillow
 google-genai
 lxml
+stock-indicators

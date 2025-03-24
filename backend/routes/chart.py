@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 import pandas as pd
 import yfinance as yf
 import pandas as pd
-
+from stock_indicators import indicators, Quote
 
 chart_bp = Blueprint("chart", __name__)
 
@@ -48,3 +48,36 @@ def get_stock_list():
     result = [{'label': x['Security'], 'value': x['Symbol']} for x in temp_result]
     return result
 
+
+@chart_bp.route('/stock-indicator', methods=['POST'])
+def post_stock_indicator():
+    req = request.json
+
+    ticker = req.get("ticker", None)
+    start_date = req.get("start_date", None)
+    end_date = req.get("end_date", None)
+
+    if not start_date:
+        start_date = pd.to_datetime("2019-01-01")
+    else:
+        start_date = pd.to_datetime(start_date[:11])
+
+    if not end_date:
+        end_date = pd.to_datetime("now")
+    else:
+        end_date = pd.to_datetime(end_date[:11])
+
+    data = yf.download(ticker, start=start_date, end=end_date)
+    data_list = data.reset_index().to_dict(orient='records')
+
+    final_result = []
+    for item in data_list:
+        transformed_dict = {key[0].lower(): value for key, value in item.items()}
+        final_result.append(transformed_dict)
+    
+    quotes_list = [
+        Quote(item['date'], item['open'], item['high'], item['low'], item['close'], item['volume']) for item in final_result
+    ]
+    results = indicators.get_sma(quotes_list, 20)
+    print(results)
+    return final_result

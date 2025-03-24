@@ -15,6 +15,7 @@ ollama pull gemma2:2b
 cd backend
 python3 -m venv .venv
 source .venv/bin/activate
+sudo yum install -y dotnet
 pip install -r requirements.txt
 ```
 
