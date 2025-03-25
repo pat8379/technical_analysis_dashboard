@@ -6,6 +6,7 @@ import { useStockList } from "./queries/useStockList";
 import { chatPrompt } from "./mutations/useChat";
 import html2canvas from "html2canvas";
 import useArray from "./hooks/useArray";
+import { stockIndicator } from "./mutations/useStockIndicator";
 
 const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [ticker, setTicker] = useState<string>("AAPL");
@@ -13,6 +14,10 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [tickerName, setTickerName] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+
+  const [indicator, setIndicator] = useState<string>("");
+  const [indicatorResponse, setIndicatorResponse] = useState<string>("");
+
 
   const {
     array: chatHistory,
@@ -59,6 +64,28 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       end_date: endDate,
     });
     setTicker(tempTicker);
+  };
+
+  const stockIndicatorMutation = useMutation({
+    mutationFn: stockIndicator,
+    onSuccess: (data) => {
+      setIndicatorResponse(data.response)
+    },
+  });
+
+  const {
+    mutate: stockIndicatorMutate,
+    isPending: stockIndicatorIsPending,
+    error: stockIndicatorError,
+  } = stockIndicatorMutation;
+
+  const fetchStockIndicatorData = () => {
+    stockIndicatorMutate({
+      ticker: tempTicker,
+      start_date: startDate,
+      end_date: endDate,
+      indicator: indicator
+    });
   };
 
   const findNameFromStockList = () => {
@@ -153,6 +180,13 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         removeChatHistory,
         filterChatHistory,
         updateChatHistory,
+        indicator,
+        setIndicator,
+        indicatorResponse,
+        setIndicatorResponse,
+        fetchStockIndicatorData,
+        stockIndicatorIsPending,
+        stockIndicatorError
       }}
     >
       {children}

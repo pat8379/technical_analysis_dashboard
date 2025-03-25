@@ -1,6 +1,7 @@
 import ChatView from "./components/Chat/ChatView";
 import MainView from "./components/MainView";
 import Sidebar from "./components/Sidebar";
+import Indicator from "./components/Indicator";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <div className="w-[60%]">
         <div className="overflow-y-auto h-full">
           <MainView />
+          <Indicator/>
         </div>
       </div>
       <div className="w-[20%]">

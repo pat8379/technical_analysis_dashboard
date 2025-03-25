@@ -39,6 +39,13 @@ interface AppContextData {
   removeChatHistory;
   filterChatHistory;
   updateChatHistory;
+  indicator: string;
+  setIndicator: React.Dispatch<React.SetStateAction<string>>;
+  indicatorResponse;
+  setIndicatorResponse;
+  fetchStockIndicatorData;
+  stockIndicatorIsPending: boolean;
+  stockIndicatorError;
 }
 
 export const AppContext: Context<AppContextData | undefined> = createContext<

@@ -2,9 +2,16 @@ from flask import Blueprint, request, jsonify
 import pandas as pd
 import yfinance as yf
 import pandas as pd
+import os
+from google import genai
 from stock_indicators import indicators, Quote
+from utils import indicator_mapper
+from dotenv import load_dotenv
+
+load_dotenv()
 
 chart_bp = Blueprint("chart", __name__)
+client = genai.Client(api_key=os.environ['API_KEY'])
 
 @chart_bp.route('', methods=['POST'])
 def post_chart_data():
@@ -56,6 +63,7 @@ def post_stock_indicator():
     ticker = req.get("ticker", None)
     start_date = req.get("start_date", None)
     end_date = req.get("end_date", None)
+    indicator = req.get("indicator", None)
 
     if not start_date:
         start_date = pd.to_datetime("2019-01-01")
@@ -78,6 +86,18 @@ def post_stock_indicator():
     quotes_list = [
         Quote(item['date'], item['open'], item['high'], item['low'], item['close'], item['volume']) for item in final_result
     ]
-    results = indicators.get_sma(quotes_list, 20)
-    print(results)
-    return final_result
+    # results = indicators.get_sma(quotes_list, 20)
+    results = indicator_mapper(quotes_list, indicator)
+
+    indicator_results = [{"date": i.date, "price": i.sma } for i in results]
+
+    prompt = f"{indicator_results} \n based on the simple moving average data above, what can be concluded?"
+    try:
+        chat = client.chats.create(
+            model="gemini-2.0-flash"
+        )
+        response = chat.send_message(message=prompt)
+        return jsonify({"response": response.text, "data": indicator_results})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
