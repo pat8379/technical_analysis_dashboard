@@ -19,6 +19,8 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const [indicatorResponse, setIndicatorResponse] = useState<string>("");
   const [indicatorTableData, setIndicatorTableData] = useState<any[]>([]);
 
+  const [chatMode, setChatMode] = useState<boolean>(true);
+
   const {
     array: chatHistory,
     set: setChatHistory,
@@ -114,7 +116,12 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const handleChat = async (chatInput) => {
     const data = await handleDownloadImage(printRef);
     pushChatHistory({ role: "user", content: chatInput });
-    chat({ message: chatInput, file: data, chat_history: chatHistory });
+    chat({
+      message: chatInput,
+      file: data,
+      chat_history: chatHistory,
+      mode: chatMode ? "chat" : "image",
+    });
   };
 
   const handleDownloadImage = async (printRef) => {
@@ -190,6 +197,8 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         stockIndicatorError,
         indicatorTableData,
         setIndicatorTableData,
+        chatMode,
+        setChatMode,
       }}
     >
       {children}

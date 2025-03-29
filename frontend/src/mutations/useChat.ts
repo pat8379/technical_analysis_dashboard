@@ -6,6 +6,7 @@ interface ChatParam {
   message: string;
   file?: string;
   chat_history?: ChatBox[];
+  mode: string;
 }
 
 export const chatPrompt = async (param: ChatParam) => {

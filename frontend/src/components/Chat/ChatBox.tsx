@@ -1,5 +1,6 @@
 import { useAppContext } from "@src/hooks/useAppContext";
 import React, { useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 import { Loader } from "rsuite";
 
 const ChatBox = () => {
@@ -48,7 +49,7 @@ const ChatBox = () => {
                     : "rgb(139 194 255)",
               }}
             >
-              {messageBox.content}
+              <ReactMarkdown>{messageBox.content}</ReactMarkdown>
             </p>
           </div>
         </div>

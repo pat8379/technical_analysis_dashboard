@@ -48,6 +48,8 @@ interface AppContextData {
   stockIndicatorError;
   indicatorTableData;
   setIndicatorTableData;
+  chatMode: boolean;
+  setChatMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AppContext: Context<AppContextData | undefined> = createContext<
