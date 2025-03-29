@@ -8,11 +8,13 @@ client = OpenAI(
     api_key=os.environ.get("OPENAI_API"),
 )
 
-def chat_with_gpt(prompt):
-    response = client.responses.create(
-        model="gpt-3.5",
-        instructions="You are a coding assistant that talks like a pirate.",
-        input="How do I check if a Python object is an instance of a class?",
+def chat_with_gpt(chat_history, user_message):
+    chat_history.append({
+        "role": "user",
+        "content": user_message
+    })
+    completion = client.chat.completions.create(
+        model="gpt-4o",
+        messages=chat_history,
     )
-
-    return response.output_text
+    return completion.choices[0].message.content

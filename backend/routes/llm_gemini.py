@@ -65,7 +65,7 @@ def image_to_llm():
                 response = chat.send_message(message=user_message)
                 return jsonify({"response": response.text})
             else:
-                response_text = chat_with_gpt(user_message)
+                response_text = chat_with_gpt(chat_history, user_message)
                 return jsonify({"response": response_text})
 
 
