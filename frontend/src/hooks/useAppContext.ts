@@ -46,6 +46,8 @@ interface AppContextData {
   fetchStockIndicatorData;
   stockIndicatorIsPending: boolean;
   stockIndicatorError;
+  indicatorTableData;
+  setIndicatorTableData;
 }
 
 export const AppContext: Context<AppContextData | undefined> = createContext<

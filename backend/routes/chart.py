@@ -5,7 +5,7 @@ import pandas as pd
 import os
 from google import genai
 from stock_indicators import indicators, Quote
-from utils import indicator_mapper
+from utils import indicator_mapper, is_number
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -86,12 +86,25 @@ def post_stock_indicator():
     quotes_list = [
         Quote(item['date'], item['open'], item['high'], item['low'], item['close'], item['volume']) for item in final_result
     ]
-    # results = indicators.get_sma(quotes_list, 20)
+
     results = indicator_mapper(quotes_list, indicator)
 
-    indicator_results = [{"date": i.date, "price": i.sma } for i in results]
+    indicator_attributes = [str(attribute) for attribute in dir(results[0]) if not attribute.startswith('_')] 
 
-    prompt = f"{indicator_results} \n based on the simple moving average data above, what can be concluded?"
+    indicator_results = []
+
+    for i in results:
+        i_data = {}
+        for attr in indicator_attributes:
+            attr_value = getattr(i, attr)
+            if is_number(attr_value):
+                attr_value = round(attr_value,3)
+            elif attr == 'date':
+                attr_value = attr_value.strftime("%Y-%m-%d")
+            i_data[attr] = attr_value
+        indicator_results.append(i_data)
+
+    prompt = f"{indicator_results} \n based on the {indicator} data above, what can be concluded?"
     try:
         chat = client.chats.create(
             model="gemini-2.0-flash"

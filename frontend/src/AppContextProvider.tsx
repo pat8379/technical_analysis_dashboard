@@ -17,7 +17,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   const [indicator, setIndicator] = useState<string>("");
   const [indicatorResponse, setIndicatorResponse] = useState<string>("");
-
+  const [indicatorTableData, setIndicatorTableData] = useState<any[]>([]);
 
   const {
     array: chatHistory,
@@ -69,7 +69,8 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
   const stockIndicatorMutation = useMutation({
     mutationFn: stockIndicator,
     onSuccess: (data) => {
-      setIndicatorResponse(data.response)
+      setIndicatorResponse(data.response);
+      setIndicatorTableData(data.data);
     },
   });
 
@@ -84,7 +85,7 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
       ticker: tempTicker,
       start_date: startDate,
       end_date: endDate,
-      indicator: indicator
+      indicator: indicator,
     });
   };
 
@@ -186,7 +187,9 @@ const AppContextProvider = ({ children }: { children: ReactNode }) => {
         setIndicatorResponse,
         fetchStockIndicatorData,
         stockIndicatorIsPending,
-        stockIndicatorError
+        stockIndicatorError,
+        indicatorTableData,
+        setIndicatorTableData,
       }}
     >
       {children}
