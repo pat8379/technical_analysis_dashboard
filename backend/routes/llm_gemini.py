@@ -5,6 +5,7 @@ from google import genai
 from google.genai import types
 import PIL.Image
 from dotenv import load_dotenv
+from src.openai import chat_with_gpt
 
 load_dotenv()
 
@@ -16,10 +17,8 @@ def image_to_llm():
     user_message = request.json.get('message', None)
     chat_history = request.json.get('chat_history', None)
     file = request.json.get('file', None)
-
-    # mode = 'chat'
-    mode = 'image'
-
+    mode = request.json.get('mode', 'chat')
+    llm = request.json.get('llm', 'gemini')
 
     chat_history_client = []
     file_data = None
@@ -58,16 +57,17 @@ def image_to_llm():
 
     if mode == 'chat':
         try:
-            chat = client.chats.create(
-                model="gemini-2.0-flash",
-                history=chat_history_client
-            )
-            # response = chat.send_message(message=user_message)
-            response = chat.send_message(message=[
-                {'mime_type':'image/jpeg', 'data': file_data}, 
-                user_message
-            ])
-            return jsonify({"response": response.text})
+            if llm == 'gemini':
+                chat = client.chats.create(
+                    model="gemini-2.0-flash",
+                    history=chat_history_client
+                )
+                response = chat.send_message(message=user_message)
+                return jsonify({"response": response.text})
+            else:
+                response_text = chat_with_gpt(user_message)
+                return jsonify({"response": response_text})
+
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
@@ -82,5 +82,31 @@ def image_to_llm():
             return jsonify({"error": str(e)}), 500
 
 
+@llm_gemini_bp.route('/list', methods=['POST'])
+def text_to_llm():
+    user_message = request.json.get('message', None)
+    chat_history = request.json.get('chat_history', None)
+
+    chat_history_client = []
+    file_data = None
+
+    if not user_message:
+        return jsonify({"error": "missing promt"}), 400
 
 
+    for entry in chat_history:
+        if entry["role"] == "assistant":
+            entry["role"] = "model"
+        chat_history_client.append(
+            types.Content(role=entry["role"], parts=[types.Part(text=entry["content"])])
+        )
+    try:
+        chat = client.chats.create(
+            model="gemini-2.0-flash",
+            history=chat_history_client
+        )
+        response = chat.send_message(message=user_message)
+        return jsonify({"response": response.text})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
